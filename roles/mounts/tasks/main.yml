@@ -1,0 +1,49 @@
+---
+
+- include_vars: "{{ var_files }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_os_family | lower }}.yml"
+      paths:
+        - "vars"
+    var_files: "{{ lookup('first_found', params, errors='ignore') }}"
+  when: var_files | length > 0
+
+
+# - name: Ensure nfs-utils is installed
+#   package:
+#      name: nfs-utils
+#      update_cache: yes
+#      state: latest
+#   become: true
+
+- name: Ensure nfs-utils is installed
+  package:
+    name: "{{ item }}"
+    update_cache: true
+    state: latest
+  loop: "{{ nfs_packages }}"
+  become: true
+
+- name: Create mountpoints
+  file:
+    path: "{{ item.mnt_path }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ mount_shares }}"
+  become: true
+
+- name: Mount NFS shares
+  mount:
+    path: "{{ item.mnt_path }}"
+    src: "{{ item.remote_path }}"
+    opts: "{{ item.mount_opts | default(mount_opts) }}"
+    fstype: "{{ item.fstype }}"
+    state: mounted
+  with_items:
+    - "{{ mount_shares }}"
+  become: true
+

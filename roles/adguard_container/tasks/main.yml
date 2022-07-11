@@ -1,0 +1,33 @@
+---
+
+- name: Create adguard compose dir
+  file:
+    path: "{{ adguard_compose_path }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy adguard-compose.yml
+  template:
+    src: adguard-compose.yml.j2
+    dest: "{{ adguard_compose_path }}/docker-compose.adguard.yml"
+    mode: 0644
+
+- name: Purge existing Containers,Images,Volumes
+  community.docker.docker_compose:
+    project_src: "{{ adguard_compose_path }}"
+    files:
+    - docker-compose.adguard.yml
+    state: absent
+    remove_images: all
+    remove_volumes: true
+
+- name: Create and start Adguardhome
+  community.docker.docker_compose:
+    project_src: "{{ adguard_compose_path }}"
+    files:
+    - docker-compose.adguard.yml
+  register: output
+ 
+
+- ansible.builtin.debug:
+    var: output

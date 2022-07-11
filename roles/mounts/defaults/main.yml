@@ -1,0 +1,2 @@
+mount_shares: []
+mount_opts: rw,auto,nofail,noatime,intr,tcp,async,actimeo=1800

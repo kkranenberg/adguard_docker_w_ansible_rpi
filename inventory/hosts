@@ -1,0 +1,9 @@
+[docker]
+192.168.27.10
+
+
+[all:vars]
+ansible_user=kk
+#ansible_become=yes
+#ansible_become_user=root
+gather_facts=true

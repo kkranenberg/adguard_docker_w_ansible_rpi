@@ -1,0 +1,13 @@
+---
+
+
+
+adguard_mount: "/mnt/adguard"
+
+
+share_host: 192.168.27.40
+mount_shares:
+  - mnt_path: "{{ adguard_mount }}"
+    remote_path: "{{ share_host }}:/mnt/Raid1/Docker/adguard"
+#    mount_opts: null
+    fstype: "nfs4"
