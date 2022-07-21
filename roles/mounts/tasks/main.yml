@@ -19,7 +19,7 @@
 #      state: latest
 #   become: true
 
-- name: Ensure nfs-utils is installed
+- name: Ensure nfs package is installed
   package:
     name: "{{ item }}"
     update_cache: true
